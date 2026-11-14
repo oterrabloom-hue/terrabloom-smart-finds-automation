@@ -19,7 +19,7 @@ Edit `products.csv`. Required columns:
 - `benefit`: short, factual benefit; avoid unverified claims.
 - `active`: `true` only after all fields are checked.
 
-The existing compost row is intentionally inactive and its normal Daraz URL is only a placeholder. It will not be posted. Replace it with your verified DCM link and image URL before setting active=true.
+The five DCM tracking URLs you previously supplied are now entered exactly in the catalogue. All five remain inactive until each row has a public HTTPS product image URL checked and added; no campaign will publish with a missing image.
 
 ## Required GitHub secrets
 Go to **Settings → Secrets and variables → Actions** and add:
