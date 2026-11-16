@@ -182,6 +182,26 @@ def publish_to_facebook(video, product):
     version = os.environ.get("FACEBOOK_GRAPH_VERSION", "").strip()
     if not all([page_id, token, version]):
         raise RuntimeError("Missing FB_PAGE_ID, FB_PAGE_ACCESS_TOKEN or FACEBOOK_GRAPH_VERSION GitHub secret.")
+    # Validate token type and target Page before uploading a large video.
+    identity = requests.get(
+        f"https://graph.facebook.com/{version}/me",
+        params={"fields": "id,name", "access_token": token},
+        timeout=30,
+    )
+    if not identity.ok:
+        try:
+            error = identity.json().get("error", {})
+            detail = f"Meta token check failed ({identity.status_code}, code {error.get('code', 'unknown')}): {error.get('message', 'Unknown Meta API error')}"
+        except ValueError:
+            detail = f"Meta token check failed ({identity.status_code}); response was not valid JSON."
+        raise RuntimeError(detail)
+    identity_data = identity.json()
+    if str(identity_data.get("id", "")) != page_id:
+        raise RuntimeError(
+            "FB_PAGE_ACCESS_TOKEN is not a Page Access Token for the configured FB_PAGE_ID. "
+            "No video was uploaded. The token identity did not match the selected Page."
+        )
+    print(f"Meta Page token preflight passed for configured Page ID {page_id}.")
     caption = (
         f"{product['name']}\n\n{product['benefit']}\n\n"
         f"See product details: {product['tracking_url']}\n\n"
