@@ -19,7 +19,7 @@ Edit `products.csv`. Required columns:
 - `benefit`: short, factual benefit; avoid unverified claims.
 - `active`: `true` only after all fields are checked.
 
-The seven DCM tracking URLs you supplied are now entered exactly in the catalogue. All seven remain inactive until each row has an exact public HTTPS product image, current listing availability and a verified DCM redirect; no campaign will publish with a missing image or unverified destination.
+The supplied DCM tracking URLs are listed in the catalogue. The Go Organic Compost 6kg row is currently active and has a public HTTPS image URL; the other products remain inactive until their image and listing details are verified.
 
 ## Required GitHub secrets
 Go to **Settings → Secrets and variables → Actions** and add:
