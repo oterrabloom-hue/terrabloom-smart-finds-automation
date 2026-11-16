@@ -198,7 +198,22 @@ def publish_to_facebook(video, product):
         )
     if not response.ok:
         raise RuntimeError(f"Facebook publishing failed ({response.status_code}): {response.text[:1000]}")
-    return response.json().get("id")
+    try:
+        result = response.json()
+    except ValueError:
+        raise RuntimeError(
+            f"Facebook returned HTTP {response.status_code} but the response was not valid JSON. "
+            f"Response: {response.text[:1000]}"
+        )
+    video_id = result.get("id") or result.get("video_id")
+    if not video_id:
+        # Do not mark a post as published unless Facebook returns a verifiable video ID.
+        safe_result = {k: v for k, v in result.items() if k not in ("access_token", "token")}
+        raise RuntimeError(
+            "Facebook returned HTTP success but no video ID; publication is unverified. "
+            f"Response: {json.dumps(safe_result, ensure_ascii=False)[:1000]}"
+        )
+    return str(video_id)
 
 
 def main():
