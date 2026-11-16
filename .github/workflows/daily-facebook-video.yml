@@ -43,3 +43,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python automation.py
+
+      - name: Save generated video for manual publishing if needed
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terrabloom-video-${{ github.run_number }}
+          path: output/*.mp4
+          if-no-files-found: ignore
+          retention-days: 7
